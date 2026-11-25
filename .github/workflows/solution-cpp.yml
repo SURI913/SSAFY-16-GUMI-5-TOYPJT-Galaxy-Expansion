@@ -1,0 +1,25 @@
+name: Validate C++ solution
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cpp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Configure
+        run: cmake -S solution -B solution/build -DCMAKE_BUILD_TYPE=Debug
+      - name: Build
+        id: build
+        run: cmake --build solution/build --config Debug
+      - name: Unit tests
+        run: ctest --test-dir solution/build -C Debug --output-on-failure
+      - name: Protocol verification
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: node scripts/verify-protocol.mjs -- ./solution/build/galaxy

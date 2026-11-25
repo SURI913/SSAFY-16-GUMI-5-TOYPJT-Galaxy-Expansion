@@ -34,3 +34,14 @@ target/
 
 # Go
 *.test
+
+# Visual Studio local settings and caches
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+CMakeUserPresets.json
+
+# Visual Studio CMake output for the participant solution
+/solution/out/
